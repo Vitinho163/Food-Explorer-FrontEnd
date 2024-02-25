@@ -17,13 +17,23 @@ export function SignUp() {
       return alert('A senha deve ter no mínimo 6 caracteres')
     }
 
-    await api.post('/users', {
-      name, 
-      email, 
-      password
-    })
+    try {
+      await api.post('/users', {
+        name, 
+        email, 
+        password
+      })
 
-    alert('Conta criada com sucesso')
+      if(response.status == 201) {
+        alert('Conta criada com sucesso')
+      }
+  
+    } catch (error) {
+      if(error.response.data.message) {
+        alert(error.response.data.message);
+      }
+      console.error('Erro ao criar conta:', error);
+    }
 
   }
   return(

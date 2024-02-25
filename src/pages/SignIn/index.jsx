@@ -8,9 +8,6 @@ export function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  console.log('Email:', email)
-  console.log('Password', password )
-
   return(
     <Container>
       <Logo />
