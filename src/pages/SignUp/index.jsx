@@ -23,16 +23,11 @@ export function SignUp() {
         email, 
         password
       })
-
-      if(response.status == 201) {
-        alert('Conta criada com sucesso')
-      }
+      
+      alert('Conta criada com sucesso');
   
     } catch (error) {
-      if(error.response.data.message) {
         alert(error.response.data.message);
-      }
-      console.error('Erro ao criar conta:', error);
     }
 
   }
