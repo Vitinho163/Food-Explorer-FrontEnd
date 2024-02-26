@@ -26,7 +26,7 @@ export const Form = styled.form`
   flex-direction: column;
   justify-content: center;
   gap: 4.2rem;
-  
+
   h2 {
     font-family: Poppins;
     font-style: normal;

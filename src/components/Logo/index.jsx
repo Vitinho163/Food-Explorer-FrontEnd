@@ -1,10 +1,10 @@
-import logoImg from '/Logo.svg'
+import logoImg from '../../../../../Logo.svg'
 import { Container } from './styles'
 
 export function Logo() {
-  return(
+  return (
     <Container>
-      <img src={logoImg} alt='Logo Food Explorer' />
+      <img src={logoImg} alt="Logo Food Explorer" />
       <h1>food explorer</h1>
     </Container>
   )

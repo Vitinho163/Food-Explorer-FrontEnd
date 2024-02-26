@@ -1,5 +1,5 @@
 export function Edit() {
-  return(
+  return (
     <div>
       <h1>Edit</h1>
     </div>
