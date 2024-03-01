@@ -12,7 +12,7 @@ export const Container = styled.div`
   }
 `
 
-export const Wrapper = styled.div `
+export const Wrapper = styled.div`
   width: 100%;
   display: flex;
   gap: 1.4rem;

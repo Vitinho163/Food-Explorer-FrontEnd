@@ -3,34 +3,61 @@ import { Container, Form } from './styles'
 import { Logo } from '../../components/Logo'
 import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
+import { Toast } from '../../components/Toast'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../../services/api'
 
 export function SignUp() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [openToast, setOpenToast] = useState(false)
+  const [toastTitle, setToastTitle] = useState('')
+  const [toastDescription, setToastDescription] = useState('')
+
+  const navigate = useNavigate()
+
+  function navigateToHomeAfterDelay() {
+    setTimeout(() => {
+      navigate('/')
+    }, 2000)
+  }
 
   async function handleCreateAccount(e) {
     e.preventDefault()
+    setOpenToast(false)
 
-    if (password.length < 6) {
-      return alert('A senha deve ter no mínimo 6 caracteres')
-    }
-
-    try {
-      await api.post('/users', {
+    await api
+      .post('/users', {
         name,
         email,
         password,
       })
+      .then((response) => {
+        console.log(response)
+        if (response.status === 201) {
+          setToastTitle('sucess')
+          setToastDescription('Conta criada com sucesso!')
+          setOpenToast(true)
 
-      alert('Conta criada com sucesso')
-    } catch (error) {
-      alert(error.response.data.message)
-    }
+          navigateToHomeAfterDelay()
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        setToastTitle(error.response.data.status)
+        setToastDescription(error.response.data.message)
+        setOpenToast(true)
+      })
   }
   return (
     <Container>
+      <Toast
+        label="Criar conta"
+        title={toastTitle}
+        description={toastDescription}
+        openToast={openToast}
+      />
       <Logo />
 
       <Form>
@@ -44,6 +71,7 @@ export function SignUp() {
 
         <Input
           label="Email"
+          type="email"
           placeholder="Exemplo: exemplo@exemplo.com.br"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -57,11 +85,11 @@ export function SignUp() {
 
         <Button
           title="Criar conta"
-          disabled={name === '' || email === '' || password === ''}
+          disabled={name === '' || email === '' || password.length < 6}
           onClick={(e) => handleCreateAccount(e)}
         />
 
-        <a href="/register">Já tenho uma conta</a>
+        <Link to={-1}>Já tenho uma conta</Link>
       </Form>
     </Container>
   )
