@@ -1,4 +1,4 @@
-import logoImg from '../../../../../Logo.svg'
+import logoImg from '../../assets/Logo.svg'
 import { Container } from './styles'
 
 export function Logo() {
