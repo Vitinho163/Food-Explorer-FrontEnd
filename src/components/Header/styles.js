@@ -6,7 +6,12 @@ export const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 2.8rem;
+  margin-bottom: 4.4rem;
   background-color: ${({ theme }) => theme.colors.dark_700};
+
+  @media (min-width: 768px) {
+    margin-bottom: 16.4rem;
+  }
 `
 
 export const MenuMobile = styled.header`
@@ -21,7 +26,7 @@ export const MenuMobile = styled.header`
   }
 `
 
-export const Button = styled.button`
+export const MenuButton = styled.button`
   width: 2.4rem;
   height: 1.8rem;
   background-color: transparent;
@@ -81,6 +86,10 @@ export const SideMenu = styled.div`
     p {
       font-size: 2.2rem;
     }
+
+    @media (min-width: 768px) {
+      display: none;
+    }
   }
 `
 
@@ -92,4 +101,29 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`
+
+export const MenuDesktop = styled.header`
+  width: 100%;
+  height: 10.4rem;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3.2rem;
+  padding: 0 6rem;
+  background-color: ${({ theme }) => theme.colors.dark_700};
+
+  a {
+    font-size: 1.6rem;
+    color: ${({ theme }) => theme.colors.light_300};
+  }
+
+  button:nth-child(3),
+  button:nth-child(4) {
+    max-width: 22rem;
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
 `

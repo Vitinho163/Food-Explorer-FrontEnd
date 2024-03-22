@@ -1,16 +1,26 @@
 import { useState } from 'react'
+import Admin from '../../assets/Admin.svg'
 import AdminMobile from '../../assets/AdminMobile.svg'
 import LogoMobile from '../../assets/LogoMobile.svg'
-import { Container, MenuMobile, Button, SideMenu, Wrapper } from './styles'
+import {
+  Container,
+  MenuMobile,
+  MenuButton,
+  SideMenu,
+  Wrapper,
+  MenuDesktop,
+} from './styles'
 import { PiReceipt } from 'react-icons/pi'
+import { GoSignOut } from 'react-icons/go'
 import { IoIosMenu, IoMdClose, IoIosSearch } from 'react-icons/io'
 import { Input } from '../Input'
 import { ItemMenu } from '../ItemMenu'
 import { Footer } from '../Footer'
-import { useNavigate } from 'react-router-dom'
+import { Button } from '../Button'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/auth'
 
-export function Header() {
+export function Header({ onChange }) {
   const { user, signOut } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -24,9 +34,9 @@ export function Header() {
   return (
     <Container>
       <MenuMobile>
-        <Button onClick={() => setIsMenuOpen(true)}>
+        <MenuButton onClick={() => setIsMenuOpen(true)}>
           <IoIosMenu />
-        </Button>
+        </MenuButton>
 
         {user.isAdmin ? (
           <img src={AdminMobile} alt="Logo" />
@@ -35,18 +45,18 @@ export function Header() {
         )}
 
         {!user.isAdmin && (
-          <Button>
+          <MenuButton onClick={() => navigate('/order')}>
             <PiReceipt />
             <span>0</span>
-          </Button>
+          </MenuButton>
         )}
       </MenuMobile>
 
       <SideMenu $isOpen={isMenuOpen}>
         <header>
-          <Button onClick={() => setIsMenuOpen(false)}>
+          <MenuButton onClick={() => setIsMenuOpen(false)}>
             <IoMdClose />
-          </Button>
+          </MenuButton>
 
           <p>Menu</p>
         </header>
@@ -55,6 +65,7 @@ export function Header() {
           <Input
             icon={IoIosSearch}
             placeholder="Busque por pratos ou ingredientes"
+            onChange={(e) => onChange(e.target.value)}
           />
 
           <ItemMenu title="Home" onClick={() => navigate('/')} />
@@ -72,6 +83,37 @@ export function Header() {
 
         <Footer />
       </SideMenu>
+
+      <MenuDesktop>
+        {user.isAdmin ? (
+          <img src={Admin} alt="logo" />
+        ) : (
+          <img src={LogoMobile} alt="logo" />
+        )}
+
+        <Input
+          icon={IoIosSearch}
+          placeholder="Busque por pratos ou ingredientes"
+          onChange={(e) => onChange(e.target.value)}
+        />
+
+        {!user.isAdmin && <Link to="/favorites">Favoritos</Link>}
+
+        {user.isAdmin ? (
+          <Button title="Novo Prato" onClick={() => navigate('/new')} />
+        ) : (
+          <Button
+            title="Pedidos"
+            icon={PiReceipt}
+            items={0}
+            onClick={() => navigate('/order')}
+          />
+        )}
+
+        <MenuButton onClick={handleSignOut}>
+          <GoSignOut />
+        </MenuButton>
+      </MenuDesktop>
     </Container>
   )
 }
