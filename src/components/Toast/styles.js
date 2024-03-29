@@ -43,6 +43,7 @@ export const StyledToastRoot = styled(Toast.Root)`
   position: fixed;
   top: 2.5rem;
   right: 0.5rem;
+  z-index: 1;
 
   &[data-state='open'] {
     animation: ${slideIn} 150ms ease-in-out;

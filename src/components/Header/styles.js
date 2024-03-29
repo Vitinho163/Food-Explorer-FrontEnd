@@ -69,7 +69,7 @@ export const SideMenu = styled.div`
   left: 0;
   display: flex;
   flex-direction: column;
-  z-index: auto;
+  z-index: 1;
   transform: ${({ $isOpen }) =>
     $isOpen ? 'translateX(0)' : 'translateX(-100%)'};
   transition: transform 0.2s ease-in-out;

@@ -7,14 +7,16 @@ import { Button } from '../Button'
 import { Container, ButtonMenu, Price, Stepper, Wrapper } from './styles'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/auth'
+import { api } from '../../services/api'
 
 export function Product({ product }) {
   const { user } = useAuth()
 
   const [isFavorite, setIsFavorite] = useState(false)
+  const [favorites, setFavorites] = useState([])
   const [stepperValue, setStepperValue] = useState(1)
 
-  // control toast
+  // control the toast
   const [openToast, setOpenToast] = useState(false)
   const [toastTitle, setToastTitle] = useState('')
   const [toastDescription, setToastDescription] = useState('')
@@ -22,6 +24,8 @@ export function Product({ product }) {
   const navigate = useNavigate()
   const productPath = `/product/${product.id}`
   const editPath = `/edit/${product.id}`
+
+  const imageURL = `${api.defaults.baseURL}/files/${product.image}`
 
   function handleAddFavorite() {
     setOpenToast(false)
@@ -40,13 +44,26 @@ export function Product({ product }) {
   }
 
   useEffect(() => {
+    async function getFavorites() {
+      const response = await api.get(`/favorites`)
+      setFavorites(response.data)
+
+      const favorite = response.data.find((item) => item.id === product.id)
+      if (favorite) {
+        setIsFavorite(true)
+      }
+    }
+    getFavorites()
+  })
+
+  useEffect(() => {
     setTimeout(() => {
       setOpenToast(false)
     }, 2000)
   }, [isFavorite])
 
   return (
-    <Container>
+    <>
       {openToast && (
         <Toast
           title={toastTitle}
@@ -55,50 +72,57 @@ export function Product({ product }) {
         />
       )}
 
-      {user.isAdmin ? (
-        <ButtonMenu onClick={() => navigate(editPath)}>
-          <PiPencilSimpleLight />
-        </ButtonMenu>
-      ) : (
-        <ButtonMenu>
-          {isFavorite ? (
-            <IoMdHeart onClick={handleRemoveFavorite} />
-          ) : (
-            <IoMdHeartEmpty onClick={handleAddFavorite} />
-          )}
-        </ButtonMenu>
-      )}
-
-      <img src={product.image} alt={product.name} />
-      <Link to={productPath}>
-        {product.name}
-        <MdKeyboardArrowRight />
-      </Link>
-      <p>{product.description}</p>
-      <Price>
-        <span>R$ </span>
-        <span>{String(product.price / 100).replace('.', ',')}</span>
-      </Price>
-
-      <Wrapper>
-        {!user.isAdmin && (
-          <Stepper>
-            <Button
-              onClick={() => setStepperValue((prevState) => prevState - 1)}
-            >
-              <IoMdRemove />
-            </Button>
-            <span>{String(stepperValue).padStart(2, '0')}</span>
-            <button
-              onClick={() => setStepperValue((prevState) => prevState + 1)}
-            >
-              <IoMdAdd />
-            </button>
-          </Stepper>
+      <Container className="keen-slider__slide">
+        {user.isAdmin ? (
+          <ButtonMenu onClick={() => navigate(editPath)}>
+            <PiPencilSimpleLight />
+          </ButtonMenu>
+        ) : (
+          <ButtonMenu>
+            {isFavorite ? (
+              <IoMdHeart onClick={handleRemoveFavorite} />
+            ) : (
+              <IoMdHeartEmpty onClick={handleAddFavorite} />
+            )}
+          </ButtonMenu>
         )}
 
-        {!user.isAdmin && <Button title="Adicionar" />}
-      </Wrapper>
-    </Container>
+        <img src={imageURL} alt={product.name} />
+
+        <Link to={productPath}>
+          {product.name}
+          <MdKeyboardArrowRight />
+        </Link>
+
+        <p>{product.description}</p>
+
+        <Price>
+          <span>R$ </span>
+          <span>{String(product.price / 100).replace('.', ',')}</span>
+        </Price>
+
+        <Wrapper>
+          {!user.isAdmin && (
+            <Stepper>
+              <button
+                onClick={() => setStepperValue((prevState) => prevState - 1)}
+              >
+                <IoMdRemove />
+              </button>
+
+              <span>{String(stepperValue).padStart(2, '0')}</span>
+
+              <button
+                onClick={() => setStepperValue((prevState) => prevState + 1)}
+              >
+                <IoMdAdd />
+              </button>
+            </Stepper>
+          )}
+
+          {!user.isAdmin && <Button title="Adicionar" />}
+        </Wrapper>
+      </Container>
+    </>
   )
 }
