@@ -51,46 +51,50 @@ export function SignUp() {
       })
   }
   return (
-    <Container>
-      <Toast
-        label="Criar conta"
-        title={toastTitle}
-        description={toastDescription}
-        openToast={openToast}
-      />
-      <Logo />
-
-      <Form>
-        <h2>Crie sua conta</h2>
-
-        <Input
-          label="Seu nome"
-          placeholder="Exemplo: Maria da Silva"
-          onChange={(e) => setName(e.target.value)}
+    <>
+      {openToast && (
+        <Toast
+          label="Criar conta"
+          title={toastTitle}
+          description={toastDescription}
+          openToast={openToast}
         />
+      )}
 
-        <Input
-          label="Email"
-          type="email"
-          placeholder="Exemplo: exemplo@exemplo.com.br"
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <Container>
+        <Logo />
+        <Form>
+          <h2>Crie sua conta</h2>
 
-        <Input
-          label="Senha"
-          placeholder="No mínimo 6 caracteres"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <Input
+            label="Seu nome"
+            placeholder="Exemplo: Maria da Silva"
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <Button
-          title="Criar conta"
-          disabled={name === '' || email === '' || password.length < 6}
-          onClick={(e) => handleCreateAccount(e)}
-        />
+          <Input
+            label="Email"
+            type="email"
+            placeholder="Exemplo: exemplo@exemplo.com.br"
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <Link to={-1}>Já tenho uma conta</Link>
-      </Form>
-    </Container>
+          <Input
+            label="Senha"
+            placeholder="No mínimo 6 caracteres"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <Button
+            title="Criar conta"
+            disabled={name === '' || email === '' || password.length < 6}
+            onClick={(e) => handleCreateAccount(e)}
+          />
+
+          <Link to={-1}>Já tenho uma conta</Link>
+        </Form>
+      </Container>
+    </>
   )
 }

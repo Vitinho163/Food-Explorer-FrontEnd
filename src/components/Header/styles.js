@@ -21,7 +21,7 @@ export const MenuMobile = styled.header`
   justify-content: space-between;
   padding-right: 75px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     display: none;
   }
 `
@@ -118,12 +118,12 @@ export const MenuDesktop = styled.header`
     color: ${({ theme }) => theme.colors.light_300};
   }
 
-  button:nth-child(3),
-  button:nth-child(4) {
+  button:nth-child(4),
+  button:nth-child(5) {
     max-width: 22rem;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: flex;
   }
 `

@@ -19,9 +19,11 @@ import { Footer } from '../Footer'
 import { Button } from '../Button'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/auth'
+import { useCart } from '../../hooks/cart'
 
 export function Header({ onChange }) {
   const { user, signOut } = useAuth()
+  const { cart } = useCart()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navigate = useNavigate()
@@ -47,7 +49,7 @@ export function Header({ onChange }) {
         {!user.isAdmin && (
           <MenuButton onClick={() => navigate('/order')}>
             <PiReceipt />
-            <span>0</span>
+            <span>{cart.length}</span>
           </MenuButton>
         )}
       </MenuMobile>
@@ -78,6 +80,12 @@ export function Header({ onChange }) {
             />
           )}
 
+          {user.isAdmin ? (
+            <ItemMenu title="Pedidos" onClick={() => navigate('/orders')} />
+          ) : (
+            <ItemMenu title="Histórico" onClick={() => navigate('/orders')} />
+          )}
+
           <ItemMenu title="Sair" onClick={handleSignOut} />
         </Wrapper>
 
@@ -97,6 +105,11 @@ export function Header({ onChange }) {
           onChange={(e) => onChange(e.target.value)}
         />
 
+        {user.isAdmin ? (
+          <Link to="/orders">Pedidos</Link>
+        ) : (
+          <Link to="/Histórico">Pedidos</Link>
+        )}
         {!user.isAdmin && <Link to="/favorites">Favoritos</Link>}
 
         {user.isAdmin ? (
@@ -105,7 +118,7 @@ export function Header({ onChange }) {
           <Button
             title="Pedidos"
             icon={PiReceipt}
-            items={0}
+            items={cart.length}
             onClick={() => navigate('/order')}
           />
         )}

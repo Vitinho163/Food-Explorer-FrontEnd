@@ -7,10 +7,14 @@ import { Button } from '../Button'
 import { Container, ButtonMenu, Price, Stepper, Wrapper } from './styles'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/auth'
+import { useCart } from '../../hooks/cart'
 import { api } from '../../services/api'
 
 export function Product({ product }) {
   const { user } = useAuth()
+
+  const { addToCart } = useCart()
+  const navigate = useNavigate()
 
   const [isFavorite, setIsFavorite] = useState(false)
   const [favorites, setFavorites] = useState([])
@@ -21,25 +25,59 @@ export function Product({ product }) {
   const [toastTitle, setToastTitle] = useState('')
   const [toastDescription, setToastDescription] = useState('')
 
-  const navigate = useNavigate()
   const productPath = `/product/${product.id}`
   const editPath = `/edit/${product.id}`
 
   const imageURL = `${api.defaults.baseURL}/files/${product.image}`
 
-  function handleAddFavorite() {
+  async function handleAddFavorite() {
     setOpenToast(false)
-    setIsFavorite(true)
-    setToastTitle('Sucesso')
-    setToastDescription('Item adicionado aos favoritos com sucesso!')
-    setOpenToast(true)
+    try {
+      const response = await api.post('/favorites/', { product_id: product.id })
+      setIsFavorite(true)
+      setToastTitle(response.data.status)
+      setToastDescription(response.data.message)
+      setOpenToast(true)
+    } catch (error) {
+      console.log(error)
+
+      setToastTitle(error.response.data.status)
+      setToastDescription(error.response.data.message)
+      setOpenToast(true)
+    }
   }
 
-  function handleRemoveFavorite() {
+  async function handleRemoveFavorite() {
     setOpenToast(false)
-    setIsFavorite(false)
-    setToastTitle('Sucesso')
-    setToastDescription('Item removido dos favoritos.')
+    try {
+      const response = await api.delete(`/favorites/${product.id}`)
+      setIsFavorite(false)
+
+      setToastTitle(response.data.status)
+      setToastDescription(response.data.message)
+      setOpenToast(true)
+    } catch (error) {
+      console.error(error)
+
+      setToastTitle(error.response.data.status)
+      setToastDescription(error.response.data.message)
+      setOpenToast(true)
+    }
+  }
+
+  function handleAddProductToCart() {
+    setOpenToast(false)
+
+    const productToCart = {
+      product_id: product.id,
+      quantity: stepperValue,
+      price: product.price,
+    }
+
+    const response = addToCart(productToCart)
+
+    setToastTitle(response.status)
+    setToastDescription(response.message)
     setOpenToast(true)
   }
 
@@ -48,7 +86,7 @@ export function Product({ product }) {
       const response = await api.get(`/favorites`)
       setFavorites(response.data)
 
-      const favorite = response.data.find((item) => item.id === product.id)
+      const favorite = favorites.find((item) => item.id === product.id)
       if (favorite) {
         setIsFavorite(true)
       }
@@ -59,7 +97,7 @@ export function Product({ product }) {
   useEffect(() => {
     setTimeout(() => {
       setOpenToast(false)
-    }, 2000)
+    }, 1500)
   }, [isFavorite])
 
   return (
@@ -120,7 +158,9 @@ export function Product({ product }) {
             </Stepper>
           )}
 
-          {!user.isAdmin && <Button title="Adicionar" />}
+          {!user.isAdmin && (
+            <Button title="Adicionar" onClick={handleAddProductToCart} />
+          )}
         </Wrapper>
       </Container>
     </>

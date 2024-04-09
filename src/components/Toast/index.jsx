@@ -35,7 +35,7 @@ export function Toast({ label, title, openToast, description }) {
       <StyledToastRoot open={open}>
         {
           <StyledTitle>
-            {title === 'Sucess' ? (
+            {title === 'sucess' ? (
               <FaCheckCircle className="sucess" />
             ) : (
               <IoIosClose className="error" />
