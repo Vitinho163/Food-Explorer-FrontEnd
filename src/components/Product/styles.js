@@ -2,7 +2,6 @@ import { styled } from 'styled-components'
 
 export const Container = styled.div`
   width: 22rem;
-  max-height: 30rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,7 +49,6 @@ export const Container = styled.div`
 
   @media (min-width: 768px) {
     width: 30rem;
-    max-height: 46rem;
     gap: 1.5rem;
 
     img {
@@ -81,16 +79,12 @@ export const Price = styled.div`
   align-items: center;
   gap: 0.5rem;
 
-  span {
-    font-size: 1.6rem;
-    text-align: center;
-    color: ${({ theme }) => theme.colors.cake_200};
-  }
+  font-size: 1.6rem;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.cake_200};
 
   @media (min-width: 768px) {
-    span {
-      font-size: 3.2rem;
-    }
+    font-size: 3.2rem;
   }
 `
 

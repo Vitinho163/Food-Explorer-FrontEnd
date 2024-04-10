@@ -32,6 +32,7 @@ export function Product({ product }) {
 
   async function handleAddFavorite() {
     setOpenToast(false)
+
     try {
       const response = await api.post('/favorites/', { product_id: product.id })
       setIsFavorite(true)
@@ -70,6 +71,7 @@ export function Product({ product }) {
 
     const productToCart = {
       product_id: product.id,
+      name: product.name,
       quantity: stepperValue,
       price: product.price,
     }
@@ -135,8 +137,10 @@ export function Product({ product }) {
         <p>{product.description}</p>
 
         <Price>
-          <span>R$ </span>
-          <span>{String(product.price / 100).replace('.', ',')}</span>
+          {(product.price / 100).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          })}
         </Price>
 
         <Wrapper>
