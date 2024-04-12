@@ -16,23 +16,23 @@ export function Toast({ label, title, openToast, description }) {
     setOpen(false)
   }
 
-  function closeToastAfterDelay() {
-    setTimeout(() => {
-      setOpen(false)
-    }, 3000)
-  }
+  //  function closeToastAfterDelay() {
+  //    setTimeout(() => {
+  //      setOpen(false)
+  //    }, 3000)
+  //  }
 
-  useEffect(() => {
-    setOpen(openToast)
-
-    if (openToast) {
-      closeToastAfterDelay()
-    }
-  }, [openToast])
+  //  useEffect(() => {
+  //    setOpen(openToast)
+  //
+  //    if (openToast) {
+  //      closeToastAfterDelay()
+  //    }
+  //  }, [openToast])
 
   return (
     <ToastPrimitive.Provider label={label}>
-      <StyledToastRoot open={open}>
+      <StyledToastRoot open={open} duration={2000}>
         {
           <StyledTitle>
             {title === 'sucess' ? (

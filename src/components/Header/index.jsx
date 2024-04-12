@@ -28,6 +28,16 @@ export function Header({ onChange }) {
 
   const navigate = useNavigate()
 
+  // function to handle navigation and close menu
+  function handleNavigate(path = '') {
+    if (path) {
+      navigate(`/${path}`)
+    } else {
+      navigate('/')
+    }
+    setIsMenuOpen(false)
+  }
+
   function handleSignOut() {
     signOut()
     navigate('/')
@@ -47,7 +57,7 @@ export function Header({ onChange }) {
         )}
 
         {!user.isAdmin && (
-          <MenuButton onClick={() => navigate('/order')}>
+          <MenuButton onClick={() => handleNavigate('order')}>
             <PiReceipt />
             <span>{cart.length}</span>
           </MenuButton>
@@ -70,20 +80,29 @@ export function Header({ onChange }) {
             onChange={(e) => onChange(e.target.value)}
           />
 
-          <ItemMenu title="Home" onClick={() => navigate('/')} />
+          <ItemMenu title="Home" onClick={() => handleNavigate()} />
           {user.isAdmin ? (
-            <ItemMenu title="Novo Prato" onClick={() => navigate('/new')} />
+            <ItemMenu
+              title="Novo Prato"
+              onClick={() => handleNavigate('new')}
+            />
           ) : (
             <ItemMenu
               title="Meus Favoritos"
-              onClick={() => navigate('/favorites')}
+              onClick={() => handleNavigate('favorites')}
             />
           )}
 
           {user.isAdmin ? (
-            <ItemMenu title="Pedidos" onClick={() => navigate('/orders')} />
+            <ItemMenu
+              title="Pedidos"
+              onClick={() => handleNavigate('orders')}
+            />
           ) : (
-            <ItemMenu title="Histórico" onClick={() => navigate('/orders')} />
+            <ItemMenu
+              title="Histórico"
+              onClick={() => handleNavigate('orders')}
+            />
           )}
 
           <ItemMenu title="Sair" onClick={handleSignOut} />
@@ -94,9 +113,13 @@ export function Header({ onChange }) {
 
       <MenuDesktop>
         {user.isAdmin ? (
-          <img src={Admin} alt="logo" />
+          <Link to="/">
+            <img src={Admin} alt="logo" />
+          </Link>
         ) : (
-          <img src={LogoMobile} alt="logo" />
+          <Link to="/">
+            <img src={LogoMobile} alt="logo" />
+          </Link>
         )}
 
         <Input

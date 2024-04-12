@@ -28,7 +28,7 @@ export const Container = styled.div`
   }
 
   @media (min-width: 768px) {
-    padding: 0 12.3rem;
+    padding: 0 6rem;
 
     img {
       width: 18rem;

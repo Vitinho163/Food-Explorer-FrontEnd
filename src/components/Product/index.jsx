@@ -96,12 +96,6 @@ export function Product({ product }) {
     getFavorites()
   })
 
-  useEffect(() => {
-    setTimeout(() => {
-      setOpenToast(false)
-    }, 1500)
-  }, [isFavorite])
-
   return (
     <>
       {openToast && (
