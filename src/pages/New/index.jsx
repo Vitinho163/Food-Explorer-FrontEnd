@@ -17,27 +17,24 @@ import {
   ProductInfoWrapper,
   IngredientsWrapper,
 } from './styles'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../services/api'
 
 export function New() {
   const [selectedFile, setSelectedFile] = useState(null)
-  const [selectedName, setSelectedName] = useState('Selecione imagem')
-  const [name, setName] = useState('')
+  const [selectedImageName, setSelectedImageName] = useState('Imagem')
 
-  // state to control the selected category
+  // state to control the product info
+  const [title, setTitle] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
-  console.log(selectedCategory)
-
-  // state to control the ingredients
   const [ingredients, setIngredients] = useState([])
   const [newIngredient, setNewIngredient] = useState('')
-
   const [price, setPrice] = useState(0)
-
   const [description, setDescription] = useState('')
 
   // state to control the toast
   const [openToast, setOpenToast] = useState(false)
-  const [toastTitle, setToastTile] = useState('')
+  const [toastTitle, setToastTitle] = useState('')
   const [toastDescription, setToastDescription] = useState('')
 
   const selectValues = [
@@ -46,10 +43,12 @@ export function New() {
     { value: 'drink', name: 'Bebida' },
   ]
 
+  const navigate = useNavigate()
+
   function handleFileChange(event) {
     const file = event.target.files[0]
     setSelectedFile(file)
-    setSelectedName(file.name)
+    setSelectedImageName(file.name)
   }
 
   function handleAddIngredient() {
@@ -61,6 +60,49 @@ export function New() {
     setIngredients((prevState) =>
       prevState.filter((item) => item !== ingredient),
     )
+  }
+
+  async function handleCreateProduct(e) {
+    e.preventDefault()
+    setOpenToast(false)
+
+    try {
+      // create the product
+      const response = await api.post('/products', {
+        name: title,
+        category: selectedCategory,
+        price,
+        description,
+        ingredients,
+      })
+
+      console.log(response)
+      const { productId } = response.data
+
+      // upload the image
+      const fileUploadForm = new FormData()
+      fileUploadForm.append('image', selectedFile)
+
+      const fileResponse = await api.put(
+        `/products/image/${productId}`,
+        fileUploadForm,
+      )
+
+      if (fileResponse.data.status === 'sucess') {
+        setToastTitle(response.data.status)
+        setToastDescription(response.data.message)
+        setOpenToast(true)
+      }
+
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } catch (error) {
+      console.error(error)
+      setToastTitle(error.response.data.status)
+      setToastDescription(error.response.data.message)
+      setOpenToast(true)
+    }
   }
 
   return (
@@ -84,7 +126,7 @@ export function New() {
             <Wrapper>
               <Input
                 icon={FiUpload}
-                name={selectedName}
+                name={selectedImageName}
                 type="file"
                 label="Imagem do prato"
                 accept="image/*"
@@ -95,7 +137,7 @@ export function New() {
               <Input
                 label="Nome"
                 placeholder="Ex.: Salada Ceasar"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
               />
 
               <Select
@@ -128,7 +170,6 @@ export function New() {
               </IngredientsWrapper>
 
               <Input
-                type="number"
                 label="Preço"
                 placeholder="R$ 00.00"
                 onChange={(e) => setPrice(e.target.value)}
@@ -145,13 +186,14 @@ export function New() {
               title="Salvar produto"
               disabled={
                 selectedFile === null ||
-                name === '' ||
+                title === '' ||
                 selectedCategory === '' ||
                 ingredients.length === 0 ||
                 newIngredient !== '' ||
                 price === 0 ||
                 description === ''
               }
+              onClick={handleCreateProduct}
             />
           </Form>
         </Content>
