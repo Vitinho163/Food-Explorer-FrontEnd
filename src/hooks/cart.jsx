@@ -29,7 +29,7 @@ function CartProvider({ children }) {
 
   // function to remove product from cart
   function removeFromCart(productId) {
-    const newCart = cart.filter((item) => item.id !== productId)
+    const newCart = cart.filter((item) => item.product_id !== productId)
     setCart(newCart)
   }
 

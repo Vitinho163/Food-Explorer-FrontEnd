@@ -71,6 +71,7 @@ export function Product({ product }) {
 
     const productToCart = {
       product_id: product.id,
+      image: product.image,
       name: product.name,
       quantity: stepperValue,
       price: product.price,
