@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { IoIosClose } from 'react-icons/io'
 import { FaCheckCircle } from 'react-icons/fa'
 import * as ToastPrimitive from '@radix-ui/react-toast'
@@ -15,20 +15,6 @@ export function Toast({ label, title, openToast, description }) {
   function handleCloseToast() {
     setOpen(false)
   }
-
-  //  function closeToastAfterDelay() {
-  //    setTimeout(() => {
-  //      setOpen(false)
-  //    }, 3000)
-  //  }
-
-  //  useEffect(() => {
-  //    setOpen(openToast)
-  //
-  //    if (openToast) {
-  //      closeToastAfterDelay()
-  //    }
-  //  }, [openToast])
 
   return (
     <ToastPrimitive.Provider label={label}>

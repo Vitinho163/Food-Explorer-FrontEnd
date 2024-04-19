@@ -19,6 +19,7 @@ export function AdminRoutes() {
       <Route path="/edit/:id" element={<Edit />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/order" element={<Order />} />
+      <Route path="/order/:id" element={<Order />} />
       <Route path="/orders" element={<Orders />} />
 
       <Route path="*" element={<NotFound />} />

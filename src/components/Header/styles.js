@@ -83,7 +83,7 @@ export const SideMenu = styled.div`
       font-size: 2.2rem;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       display: none;
     }
   }

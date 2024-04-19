@@ -15,6 +15,7 @@ export function CustomerRoutes() {
       <Route path="/product/:id" element={<Product />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/order" element={<Order />} />
+      <Route path="/order/:id" element={<Order />} />
       <Route path="/orders" element={<Orders />} />
 
       <Route path="*" element={<NotFound />} />

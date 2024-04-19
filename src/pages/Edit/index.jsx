@@ -159,7 +159,7 @@ export function Edit() {
         setRawPrice(response.data.price)
         setDescription(response.data.description)
       } catch (error) {
-        console.log(error.response.data)
+        console.error(error.response.data)
       }
     }
 

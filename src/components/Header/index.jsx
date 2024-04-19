@@ -56,7 +56,9 @@ export function Header({ onChange }) {
           <img src={LogoMobile} alt="Logo" />
         )}
 
-        {!user.isAdmin && (
+        {user.isAdmin ? (
+          <div></div>
+        ) : (
           <MenuButton onClick={() => handleNavigate('order')}>
             <PiReceipt />
             <span>{cart.length}</span>
@@ -131,7 +133,7 @@ export function Header({ onChange }) {
         {user.isAdmin ? (
           <Link to="/orders">Pedidos</Link>
         ) : (
-          <Link to="/Histórico">Pedidos</Link>
+          <Link to="/orders">Histórico</Link>
         )}
         {!user.isAdmin && <Link to="/favorites">Favoritos</Link>}
 

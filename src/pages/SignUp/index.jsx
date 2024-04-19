@@ -44,7 +44,7 @@ export function SignUp() {
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.error(error)
         setToastTitle(error.response.data.status)
         setToastDescription(error.response.data.message)
         setOpenToast(true)

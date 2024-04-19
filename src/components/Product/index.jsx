@@ -40,7 +40,7 @@ export function Product({ product }) {
       setToastDescription(response.data.message)
       setOpenToast(true)
     } catch (error) {
-      console.log(error)
+      console.error(error)
 
       setToastTitle(error.response.data.status)
       setToastDescription(error.response.data.message)
@@ -74,7 +74,7 @@ export function Product({ product }) {
       image: product.image,
       name: product.name,
       quantity: stepperValue,
-      price: product.price,
+      Unit_price: product.price,
     }
 
     const response = addToCart(productToCart)
