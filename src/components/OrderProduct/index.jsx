@@ -3,7 +3,6 @@ import { api } from '../../services/api'
 import { Container, Content, Wrapper } from './styles'
 
 export function OrderProduct({ product, isNew, onClick }) {
-  console.log('product:', product)
   const productImageURL = `${api.defaults.baseURL}/files/${product.image}`
 
   return (

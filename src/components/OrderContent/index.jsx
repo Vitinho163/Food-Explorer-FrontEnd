@@ -1,10 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Container, Wrapper, StatusWrapper } from './styles'
 import { Select } from '../Select'
+import { Toast } from '../Toast'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../services/api'
+import { IoIosArrowForward } from 'react-icons/io'
 
 export function OrderContent({ order, user }) {
+  const navigate = useNavigate()
+
+  const [initialStatus, setInitialStatus] = useState(order.status)
   const [selectedStatus, setSelectedStatus] = useState(order.status)
+
+  // toast states
+  const [openToast, setOpenToast] = useState(false)
+  const [toastTitle, setToastTitle] = useState('')
+  const [toastDescription, setToastDescription] = useState('')
 
   const selectValues = [
     { status: 'pending', value: 'pending', name: 'Pendente' },
@@ -32,45 +44,89 @@ export function OrderContent({ order, user }) {
     }
   }
 
+  useEffect(() => {
+    async function updateStatus() {
+      setOpenToast(false)
+      try {
+        const response = await api.patch(`/orders/${order.id}`, {
+          status: selectedStatus,
+        })
+
+        setToastTitle(response.data.status)
+        setToastDescription(response.data.message)
+        setOpenToast(true)
+      } catch (error) {
+        console.error(error)
+
+        setToastTitle(error.response.data.status)
+        setToastDescription(error.response.data.message)
+        setOpenToast(true)
+      }
+    }
+
+    if (selectedStatus !== initialStatus) {
+      updateStatus()
+      setInitialStatus(selectedStatus)
+    }
+  }, [selectedStatus, initialStatus, order.id])
+
   return (
-    <Container>
-      <Wrapper to={`/order/${order.id}`}>
-        <p>Nº: ${order.id}</p>
-        <p>Criado em: ${renderFormattedDate(order.created_at)}</p>
-        <p>Pedido: ${renderOrderItems()}</p>
-      </Wrapper>
-
-      {user.isAdmin ? (
-        <Select
-          title="Selecione o status do pedido"
-          value={selectedStatus}
-          onChange={setSelectedStatus}
-          values={selectValues}
+    <>
+      {openToast && (
+        <Toast
+          title={toastTitle}
+          description={toastDescription}
+          open={openToast}
         />
-      ) : (
-        <>
-          {order.status === 'pending' && (
-            <StatusWrapper>
-              <div data-status={order.status}></div>
-              <p>Pendente</p>
-            </StatusWrapper>
-          )}
-
-          {order.status === 'preparing' && (
-            <StatusWrapper>
-              <div data-status={order.status}></div>
-              <p>Preparando</p>
-            </StatusWrapper>
-          )}
-
-          {order.status === 'delivered' && (
-            <StatusWrapper>
-              <div data-status={order.status}></div>
-              <p>Entregue</p>
-            </StatusWrapper>
-          )}
-        </>
       )}
-    </Container>
+      <Container>
+        <Wrapper to={`/order/${order.id}`}>
+          <p>
+            Pedido: <span>{order.id}</span>
+          </p>
+          <p>
+            Criado em: <span>{renderFormattedDate(order.created_at)}</span>
+          </p>
+          <p>
+            Pedido: <span>{renderOrderItems()}</span>
+          </p>
+          <button onClick={() => navigate(`/order/${order.id}`)}>
+            Detalhes {<IoIosArrowForward />}
+          </button>
+        </Wrapper>
+
+        {user.isAdmin ? (
+          <Select
+            title="Selecione o status do pedido"
+            value={selectedStatus}
+            onChange={setSelectedStatus}
+            values={selectValues}
+          />
+        ) : (
+          <>
+            {order.status === 'pending' && (
+              <StatusWrapper>
+                <div data-status={order.status}></div>
+                <p>Pendente</p>
+              </StatusWrapper>
+            )}
+
+            {order.status === 'preparing' && (
+              <StatusWrapper>
+                <div data-status={order.status}></div>
+                <p>Preparando</p>
+              </StatusWrapper>
+            )}
+
+            {order.status === 'delivered' && (
+              <StatusWrapper>
+                <div data-status={order.status}></div>
+                <p>Entregue</p>
+              </StatusWrapper>
+            )}
+          </>
+        )}
+      </Container>
+    </>
   )
 }

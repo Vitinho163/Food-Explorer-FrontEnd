@@ -10,7 +10,6 @@ import { api } from '../../services/api'
 export function Orders() {
   const { user } = useAuth()
   const [orders, setOrders] = useState([])
-  console.log(orders)
 
   useEffect(() => {
     async function loadOrders() {

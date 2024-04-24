@@ -3,13 +3,24 @@ import BannerImg from '../../assets/BannerImg.svg'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { Container, Banner, Wrapper } from './styles'
-import { Product } from '../../components/Product'
 import { Session } from '../../components/Session'
 import { api } from '../../services/api'
 
 export function Home() {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState([])
+
+  const filteredFoodProducts = products.filter(
+    (product) => product.category === 'food',
+  )
+
+  const filteredDessertProducts = products.filter(
+    (product) => product.category === 'dessert',
+  )
+
+  const filteredDrinkProducts = products.filter(
+    (product) => product.category === 'drink',
+  )
 
   useEffect(() => {
     async function getProducts() {
@@ -33,40 +44,16 @@ export function Home() {
       )}
 
       <Wrapper>
-        {products.filter((product) => product.category === 'food').length >
-          0 && (
-          <Session title="Refeições">
-            {products.map(
-              (product) =>
-                product.category === 'food' && (
-                  <Product key={product.id} product={product} />
-                ),
-            )}
-          </Session>
+        {filteredFoodProducts.length > 0 && (
+          <Session title="Refeições" products={filteredFoodProducts} />
         )}
 
-        {products.filter((product) => product.category === 'dessert').length >
-          0 && (
-          <Session title="Sobremesas">
-            {products.map(
-              (product) =>
-                product.category === 'dessert' && (
-                  <Product key={product.id} product={product} />
-                ),
-            )}
-          </Session>
+        {filteredDessertProducts.length > 0 && (
+          <Session title="Sobremesas" products={filteredDessertProducts} />
         )}
 
-        {products.filter((product) => product.category === 'drink').length >
-          0 && (
-          <Session title="Bebidas">
-            {products.map(
-              (product) =>
-                product.category === 'drink' && (
-                  <Product key={product.id} product={product} />
-                ),
-            )}
-          </Session>
+        {filteredDrinkProducts.length > 0 && (
+          <Session title="Bebidas" products={filteredDessertProducts} />
         )}
       </Wrapper>
 

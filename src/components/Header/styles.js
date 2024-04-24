@@ -15,7 +15,6 @@ export const MenuMobile = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: 75px;
 
   @media (min-width: 1024px) {
     display: none;
@@ -65,7 +64,7 @@ export const SideMenu = styled.div`
   left: 0;
   display: flex;
   flex-direction: column;
-  z-index: 1;
+  z-index: 9999;
   transform: ${({ $isOpen }) =>
     $isOpen ? 'translateX(0)' : 'translateX(-100%)'};
   transition: transform 0.2s ease-in-out;
@@ -82,10 +81,10 @@ export const SideMenu = styled.div`
     p {
       font-size: 2.2rem;
     }
+  }
 
-    @media (min-width: 1024px) {
-      display: none;
-    }
+  @media (min-width: 1024px) {
+    display: none;
   }
 `
 
@@ -119,7 +118,7 @@ export const MenuDesktop = styled.header`
     max-width: 22rem;
   }
 
-  @media (max-width: 1024px) {
+  @media (min-width: 1024px) {
     display: flex;
   }
 `
