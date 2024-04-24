@@ -21,7 +21,8 @@ export function Toast({ label, title, openToast, description }) {
       <StyledToastRoot open={open} duration={2000}>
         {
           <StyledTitle>
-            {title === 'sucess' ? (
+            {title.toLowerCase() === 'sucess' ||
+            title.toLowerCase() === 'success' ? (
               <FaCheckCircle className="sucess" />
             ) : (
               <IoIosClose className="error" />
