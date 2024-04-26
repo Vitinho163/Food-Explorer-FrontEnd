@@ -158,7 +158,7 @@ export function Product({ product }) {
           )}
 
           {!user.isAdmin && (
-            <Button title="Adicionar" onClick={handleAddProductToCart} />
+            <Button title="Incluir" onClick={handleAddProductToCart} />
           )}
         </Wrapper>
       </Container>

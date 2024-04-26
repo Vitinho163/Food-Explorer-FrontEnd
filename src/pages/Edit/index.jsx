@@ -260,7 +260,7 @@ export function Edit() {
               </Dialog>
 
               <Button
-                title="Salvar produto"
+                title="Salvar alterações"
                 disabled={
                   title === '' ||
                   selectedCategory === '' ||

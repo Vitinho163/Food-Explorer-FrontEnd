@@ -85,7 +85,7 @@ export function Product() {
             <img src={imageURL} alt={product.title} />
 
             <ProductInfo>
-              <h1>{product.title}</h1>
+              <h1>{product.name}</h1>
               <p>{product.description}</p>
 
               {product.ingredients && (
