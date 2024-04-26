@@ -138,7 +138,7 @@ export function Home() {
           {filteredDrinkProducts.length > 0 && (
             <Session
               title="Bebidas"
-              products={filteredDessertProducts}
+              products={filteredDrinkProducts}
               addFavorite={handleAddFavorite}
               removeFavorite={handleRemoveFavorite}
               addProductToCart={handleAddProductToCart}
