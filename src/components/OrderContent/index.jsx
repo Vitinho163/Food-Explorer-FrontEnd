@@ -5,7 +5,7 @@ import { Select } from '../Select'
 import { Toast } from '../Toast'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../services/api'
-import { IoIosArrowForward } from 'react-icons/io'
+import { IoMdArrowForward } from 'react-icons/io'
 
 export function OrderContent({ order, user }) {
   const navigate = useNavigate()
@@ -91,7 +91,7 @@ export function OrderContent({ order, user }) {
             Pedido: <span>{renderOrderItems()}</span>
           </p>
           <button onClick={() => navigate(`/order/${order.id}`)}>
-            Detalhes {<IoIosArrowForward />}
+            Detalhes {<IoMdArrowForward />}
           </button>
         </Wrapper>
 

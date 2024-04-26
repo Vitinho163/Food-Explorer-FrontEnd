@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   justify-content: start;
   margin: 5.6rem 2.8rem 4rem;
   gap: 2.4rem;
@@ -19,6 +19,20 @@ export const Content = styled.div`
     font-size: 3.2rem;
     font-weight: 500;
     line-height: 140%;
+    color: ${({ theme }) => theme.colors.light_300};
+  }
+
+  > h3 {
+    font-size: 3.2rem;
+    font-weight: 500;
+    line-height: 140%;
+    color: ${({ theme }) => theme.colors.tomato_300};
+  }
+
+  > p {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 160%;
     color: ${({ theme }) => theme.colors.light_300};
   }
 

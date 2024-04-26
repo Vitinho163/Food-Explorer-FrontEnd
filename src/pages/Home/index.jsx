@@ -4,11 +4,19 @@ import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { Container, Banner, Wrapper } from './styles'
 import { Session } from '../../components/Session'
+import { Toast } from '../../components/Toast'
 import { api } from '../../services/api'
+import { useCart } from '../../hooks/cart'
 
 export function Home() {
+  const { addToCart } = useCart()
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState([])
+
+  // control the toast
+  const [openToast, setOpenToast] = useState(false)
+  const [toastTitle, setToastTitle] = useState('')
+  const [toastDescription, setToastDescription] = useState('')
 
   const filteredFoodProducts = products.filter(
     (product) => product.category === 'food',
@@ -22,6 +30,60 @@ export function Home() {
     (product) => product.category === 'drink',
   )
 
+  async function handleAddFavorite(product) {
+    setOpenToast(false)
+
+    try {
+      const response = await api.post(`/favorites/`, { product_id: product.id })
+
+      setToastTitle(response.data.status)
+      setToastDescription(response.data.message)
+      setOpenToast(true)
+    } catch (error) {
+      console.error(error)
+
+      setToastTitle(error.response.data.status)
+      setToastDescription(error.response.data.message)
+      setOpenToast(true)
+    }
+  }
+
+  async function handleRemoveFavorite(product) {
+    setOpenToast(false)
+
+    try {
+      const response = await api.delete(`/favorites/${product.id}`)
+
+      setToastTitle(response.data.status)
+      setToastDescription(response.data.message)
+      setOpenToast(true)
+    } catch (error) {
+      console.error(error)
+
+      setToastTitle(error.response.data.status)
+      setToastDescription(error.response.data.message)
+      setOpenToast(true)
+    }
+  }
+
+  function handleAddProductToCart(product, stepperValue) {
+    setOpenToast(false)
+
+    const productToCart = {
+      product_id: product.id,
+      image: product.image,
+      name: product.name,
+      quantity: stepperValue,
+      Unit_price: product.price,
+    }
+
+    const response = addToCart(productToCart)
+
+    setToastTitle(response.status)
+    setToastDescription(response.message)
+    setOpenToast(true)
+  }
+
   useEffect(() => {
     async function getProducts() {
       const response = await api.get(`/products?name=${search}`)
@@ -31,33 +93,61 @@ export function Home() {
   }, [search])
 
   return (
-    <Container>
-      <Header onChange={setSearch} />
-      {search === '' && (
-        <Banner>
-          <img src={BannerImg} alt="Imagem do banner" />
-          <div>
-            <h2>Sabores inigualáveis</h2>
-            <p>Sinta o cuidado do preparo com ingredientes selecionados.</p>
-          </div>
-        </Banner>
+    <>
+      {openToast && (
+        <Toast
+          title={toastTitle}
+          description={toastDescription}
+          setOpenToast={setOpenToast}
+        />
       )}
 
-      <Wrapper>
-        {filteredFoodProducts.length > 0 && (
-          <Session title="Refeições" products={filteredFoodProducts} />
+      <Container>
+        <Header onChange={setSearch} />
+        {search === '' && (
+          <Banner>
+            <img src={BannerImg} alt="Imagem do banner" />
+            <div>
+              <h2>Sabores inigualáveis</h2>
+              <p>Sinta o cuidado do preparo com ingredientes selecionados.</p>
+            </div>
+          </Banner>
         )}
 
-        {filteredDessertProducts.length > 0 && (
-          <Session title="Sobremesas" products={filteredDessertProducts} />
-        )}
+        <Wrapper>
+          {filteredFoodProducts.length > 0 && (
+            <Session
+              title="Refeições"
+              products={filteredFoodProducts}
+              addFavorite={handleAddFavorite}
+              removeFavorite={handleRemoveFavorite}
+              addProductToCart={handleAddProductToCart}
+            />
+          )}
 
-        {filteredDrinkProducts.length > 0 && (
-          <Session title="Bebidas" products={filteredDessertProducts} />
-        )}
-      </Wrapper>
+          {filteredDessertProducts.length > 0 && (
+            <Session
+              title="Sobremesas"
+              products={filteredDessertProducts}
+              addFavorite={handleAddFavorite}
+              removeFavorite={handleRemoveFavorite}
+              addProductToCart={handleAddProductToCart}
+            />
+          )}
 
-      <Footer />
-    </Container>
+          {filteredDrinkProducts.length > 0 && (
+            <Session
+              title="Bebidas"
+              products={filteredDessertProducts}
+              addFavorite={handleAddFavorite}
+              removeFavorite={handleRemoveFavorite}
+              addProductToCart={handleAddProductToCart}
+            />
+          )}
+        </Wrapper>
+
+        <Footer />
+      </Container>
+    </>
   )
 }
