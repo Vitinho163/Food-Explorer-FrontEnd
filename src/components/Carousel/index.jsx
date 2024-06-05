@@ -4,7 +4,6 @@ import UseEmblaCarousel from 'embla-carousel-react'
 import { Embla, EmblaContainer, EmblaViewport } from './styles'
 
 export function Carousel({
-  slides,
   options,
   products,
   addFavorite,
@@ -17,17 +16,15 @@ export function Carousel({
     <Embla>
       <EmblaViewport ref={emblaRef}>
         <EmblaContainer>
-          {slides.map(() =>
-            products.map((product) => (
-              <Product
-                key={product.id}
-                product={product}
-                addFavorite={addFavorite}
-                removeFavorite={removeFavorite}
-                addProductToCart={addProductToCart}
-              />
-            )),
-          )}
+          {products.map((product) => (
+            <Product
+              key={product.id}
+              product={product}
+              addFavorite={addFavorite}
+              removeFavorite={removeFavorite}
+              addProductToCart={addProductToCart}
+            />
+          ))}
         </EmblaContainer>
       </EmblaViewport>
     </Embla>

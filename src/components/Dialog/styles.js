@@ -37,10 +37,10 @@ export const StyledContent = styled(AlertDialog.Content)`
   padding: 2.4rem;
   position: fixed;
   top: 50%;
-  right: 50%;
+  left: 50%;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.colors.dark_900};
-  transform: translate(50% -50%);
+  transform: translate(-50%, -50%);
   animation: ${contentShow} 0.2s ease-in-out;
 
   &:focus {
