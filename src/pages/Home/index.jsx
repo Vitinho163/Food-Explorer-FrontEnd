@@ -86,9 +86,36 @@ export function Home() {
 
   useEffect(() => {
     async function getProducts() {
-      const response = await api.get(`/products?name=${search}`)
-      setProducts(response.data)
+      // Cria duas promessas para as requisições
+      const fetchByName = api
+        .get(`/products?name=${search}`)
+        .then((response) => response.data)
+        .catch(() => [])
+      const fetchByIngredient = api
+        .get(`/products?ingredient=${search}`)
+        .then((response) => response.data)
+        .catch(() => [])
+
+      // Usa Promise.all para resolver ambas as promessas
+      const results = await Promise.all([fetchByName, fetchByIngredient])
+
+      // Combina os arrays resultantes, filtrando duplicatas
+      const combinedResults = [...results[0], ...results[1]].reduce(
+        (acc, current) => {
+          const x = acc.find((item) => item.id === current.id)
+          if (!x) {
+            return acc.concat([current])
+          } else {
+            return acc
+          }
+        },
+        [],
+      )
+
+      // Atualiza o estado com os produtos combinados
+      setProducts(combinedResults)
     }
+
     getProducts()
   }, [search])
 
