@@ -149,7 +149,7 @@ export function Order() {
               </Content>
             ) : (
               <Content>
-                <h1>Status</h1>
+                <h1>Pagamento</h1>
                 <Tabs page={page} onClick={handleNewOrder} />
               </Content>
             ))}
@@ -213,7 +213,7 @@ export function Order() {
               page === 'preparing' ||
               page === 'delivered') && (
               <Content>
-                <h1>Status do Pedido</h1>
+                <h1>Pagamento</h1>
                 <Tabs page={page} onClick={handleNewOrder} />
               </Content>
             )}

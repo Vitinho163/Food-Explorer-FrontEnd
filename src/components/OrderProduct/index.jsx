@@ -14,25 +14,16 @@ export function OrderProduct({ product, isNew, onClick }) {
           <p>
             {product.quantity} <FaTimes />
           </p>
-          <h1>{product.title}</h1>
+          <h1>{product.name}</h1>
           <span>
-            {product.price_per_item &&
-              (
-                (product.price_per_item / 100) *
-                product.quantity
-              ).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-
-            {product.price_in_cents &&
-              (
-                (product.price_in_cents / 100) *
-                product.quantity
-              ).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
+            {product.Unit_price &&
+              ((product.Unit_price / 100) * product.quantity).toLocaleString(
+                'pt-BR',
+                {
+                  style: 'currency',
+                  currency: 'BRL',
+                },
+              )}
           </span>
         </Wrapper>
 
