@@ -79,6 +79,11 @@ export const TabsContent = styled(Tabs.Content)`
     padding: 1.8rem;
   }
 
+  &.address {
+    height: auto;
+    border-radius: 1rem;
+  }
+
   svg {
     width: 9.6rem;
     height: 9.6rem;

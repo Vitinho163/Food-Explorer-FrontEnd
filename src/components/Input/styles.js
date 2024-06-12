@@ -7,6 +7,12 @@ export const Container = styled.div`
   justify-content: center;
   gap: 1.6rem;
 
+  ${({ width }) =>
+    width &&
+    `
+    width: ${width};
+  `}
+
   label {
     color: ${({ theme }) => theme.colors.light_400};
   }

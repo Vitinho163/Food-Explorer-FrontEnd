@@ -1,8 +1,8 @@
 import { Container, Wrapper } from './styles'
 
-export function Input({ icon: Icon, name, label, ...rest }) {
+export function Input({ icon: Icon, name, label, width, ...rest }) {
   return (
-    <Container>
+    <Container width={width}>
       {label && <label htmlFor={label}>{label}</label>}
       <Wrapper>
         {Icon && <Icon />}

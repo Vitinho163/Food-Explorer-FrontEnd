@@ -19,7 +19,7 @@ export function Order() {
   const { user } = useAuth()
 
   // page state
-  const [page, setPage] = useState('order')
+  const [page, setPage] = useState('address')
 
   // order state
   const [orderItems, setOrderItems] = useState([])
@@ -105,6 +105,13 @@ export function Order() {
             </Content>
           )}
 
+          {cart.length !== 0 && page === 'address' && (
+            <Content>
+              <h1>Entrega</h1>
+              <Tabs page={page} onClick={() => setPage('order')} />
+            </Content>
+          )}
+
           {cart.length !== 0 && page === 'order' && (
             <Content>
               <h1>Meu pedido</h1>
@@ -167,26 +174,34 @@ export function Order() {
             </Content>
           )}
 
-          {cart.length !== 0 && (page === 'order' || page === 'payment') && (
-            <Content>
-              <h1>Meu pedido</h1>
-              {cart.length !== 0 &&
-                cart.map((cartItem) => (
-                  <OrderProduct
-                    key={cartItem.product_id}
-                    isNew
-                    product={cartItem}
-                    onClick={() => handleRemoveFromCart(cartItem.product_id)}
-                  />
-                ))}
+          {cart.length !== 0 &&
+            (page === 'order' || page === 'payment' || page === 'address') && (
+              <Content>
+                <h1>Meu pedido</h1>
+                {cart.length !== 0 &&
+                  cart.map((cartItem) => (
+                    <OrderProduct
+                      key={cartItem.product_id}
+                      isNew
+                      product={cartItem}
+                      onClick={() => handleRemoveFromCart(cartItem.product_id)}
+                    />
+                  ))}
 
-              <h2>
-                Total:{' '}
-                {(total / 100).toLocaleString('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                })}
-              </h2>
+                <h2>
+                  Total:{' '}
+                  {(total / 100).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </h2>
+              </Content>
+            )}
+
+          {cart.length !== 0 && page === 'address' && (
+            <Content>
+              <h1>Entrega</h1>
+              <Tabs page={page} onClick={() => setPage('order')} />
             </Content>
           )}
 
