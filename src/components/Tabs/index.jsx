@@ -1,4 +1,5 @@
 import qrCode from '../../assets/qrCode.svg'
+import { api } from '../../services/api'
 import {
   Form,
   TabsContent,
@@ -53,6 +54,53 @@ export function Tabs({ page, onClick }) {
     }
   }
 
+  function handleCep(e) {
+    e.preventDefault()
+    const cep = e.target.value
+    setZipCode(cep)
+
+    switch (true) {
+      case cep === '':
+        setStreet('')
+        setNumber('')
+        setComplement('')
+        setCity('')
+        setState('')
+        setNeighborhood('')
+        break
+
+      case cep.length === 8:
+        setZipCode(cep)
+        searchCep(cep)
+        break
+    }
+  }
+
+  async function searchCep(cep) {
+    try {
+      const response = api.get(`/search_cep`, { cep })
+      setOpenToast(false)
+      setStreet(response.data.logradouro)
+      setNeighborhood(response.data.bairro)
+      setCity(response.data.localidade)
+      setState(response.data.uf)
+      setZipCode(response.data.cep)
+
+      setToastTitle('Erro de validação')
+      setToastDescription(
+        'Preencha todos os campos de endereço antes de continuar.',
+      )
+      setOpenToast(true)
+    } catch (error) {
+      if (error.response.data.message === 'Cep não localizado') {
+        setOpenToast(false)
+        setToastTitle('Erro')
+        setToastDescription(error.response.message)
+        setOpenToast(true)
+      }
+    }
+  }
+
   return (
     <>
       {openToast && (
@@ -101,7 +149,7 @@ export function Tabs({ page, onClick }) {
                     label="Cep"
                     placeholder="00000-000"
                     value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
+                    onChange={handleCep}
                   />
                 </Wrapper>
 
