@@ -16,7 +16,7 @@ import { CiClock2 } from 'react-icons/ci'
 import { Toast } from '../../components/Toast'
 import { useState } from 'react'
 
-export function Tabs({ page, onClick }) {
+export function Tabs({ page, onClick, onAddressChange }) {
   let value = 'pix'
   if (page === 'address') {
     value = 'address'
@@ -44,6 +44,16 @@ export function Tabs({ page, onClick }) {
   function handleNextPage(e) {
     e.preventDefault()
     if (validateAddressFields()) {
+      const addressData = {
+        city,
+        state,
+        street,
+        number,
+        zipCode,
+        complement,
+        neighborhood,
+      }
+      onAddressChange(addressData) // Envia os dados do endereço para o componente Order
       onClick()
     } else {
       setToastTitle('Erro de validação')
@@ -77,20 +87,21 @@ export function Tabs({ page, onClick }) {
   }
 
   async function searchCep(cep) {
+    console.log(cep)
     try {
-      const response = api.get(`/search_cep`, { cep })
+      const response = await api.post(`/search_cep`, { cep })
       setOpenToast(false)
-      setStreet(response.data.logradouro)
-      setNeighborhood(response.data.bairro)
-      setCity(response.data.localidade)
-      setState(response.data.uf)
-      setZipCode(response.data.cep)
+      if (response) {
+        setStreet(response.data.logradouro)
+        setNeighborhood(response.data.bairro)
+        setCity(response.data.localidade)
+        setState(response.data.uf)
+        setZipCode(response.data.cep)
 
-      setToastTitle('Erro de validação')
-      setToastDescription(
-        'Preencha todos os campos de endereço antes de continuar.',
-      )
-      setOpenToast(true)
+        setToastTitle('sucess')
+        setToastDescription('Cep localizado com sucesso.')
+        setOpenToast(true)
+      }
     } catch (error) {
       if (error.response.data.message === 'Cep não localizado') {
         setOpenToast(false)

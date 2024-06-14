@@ -21,9 +21,16 @@ export function Order() {
   // page state
   const [page, setPage] = useState('address')
 
+  // State address
+  const [address, setAddress] = useState({})
+
+  // update address
+  function handleAddressChange(newAddress) {
+    setAddress(newAddress)
+  }
+
   // order state
   const [orderItems, setOrderItems] = useState([])
-  console.log('order', orderItems)
 
   // control the toast
   const [openToast, setOpenToast] = useState(false)
@@ -50,7 +57,7 @@ export function Order() {
     setOpenToast(false)
 
     try {
-      const response = await api.post('/orders', { orderItems: cart })
+      const response = await api.post('/orders', { orderItems: cart, address })
       setToastTitle(response.data.message)
       setToastDescription(response.data.message)
       setOpenToast(true)
@@ -108,7 +115,11 @@ export function Order() {
           {cart.length !== 0 && page === 'address' && (
             <Content>
               <h1>Entrega</h1>
-              <Tabs page={page} onClick={() => setPage('order')} />
+              <Tabs
+                page={page}
+                onClick={() => setPage('order')}
+                onAddressChange={handleAddressChange}
+              />
             </Content>
           )}
 
@@ -201,7 +212,11 @@ export function Order() {
           {cart.length !== 0 && page === 'address' && (
             <Content>
               <h1>Entrega</h1>
-              <Tabs page={page} onClick={() => setPage('order')} />
+              <Tabs
+                page={page}
+                onClick={() => setPage('order')}
+                onAddressChange={handleAddressChange}
+              />
             </Content>
           )}
 
