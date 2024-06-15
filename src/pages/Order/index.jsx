@@ -12,14 +12,18 @@ import { api } from '../../services/api'
 import { useAuth } from '../../hooks/auth'
 
 export function Order() {
+  const taxaPorKm = 2
   const { id } = useParams()
   const navigate = useNavigate()
 
   const { cart, removeFromCart, removeAllFromCart } = useCart()
   const { user } = useAuth()
 
+  // delivery state
+  const [frete, setFrete] = useState()
+
   // page state
-  const [page, setPage] = useState('address')
+  const [page, setPage] = useState('orderNotAddress')
 
   // State address
   const [address, setAddress] = useState({})
@@ -87,6 +91,24 @@ export function Order() {
     }
   }, [id])
 
+  // get info delivery from api if address is present
+  useEffect(() => {
+    if (address) {
+      async function fetchDelivery() {
+        const response = await api.get(
+          `/delivery?origin=BOM D BOCA, francisco morato&destination=Osasco, SP`,
+        )
+
+        if (response) {
+          const frete =
+            Number(response.data.distance.replace(' km', '')) * taxaPorKm
+          setFrete(frete)
+        }
+      }
+      fetchDelivery()
+    }
+  }, [address])
+
   return (
     <>
       {openToast && (
@@ -109,6 +131,29 @@ export function Order() {
                 <strong>&quot;Incluir&quot;</strong> na página inicial ou do
                 produto.
               </p>
+            </Content>
+          )}
+
+          {cart.length !== 0 && page === 'orderNotAddress' && (
+            <Content>
+              <h1>Meu pedido</h1>
+              {cart.map((cartItem) => (
+                <OrderProduct
+                  key={cartItem.product_id}
+                  product={cartItem}
+                  isNew
+                  onClick={() => handleRemoveFromCart(cartItem.product_id)}
+                />
+              ))}
+              <h2>
+                Total:{' '}
+                {(total / 100).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+              </h2>
+
+              <Button title="Avançar" onClick={() => setPage('address')} />
             </Content>
           )}
 
@@ -135,8 +180,17 @@ export function Order() {
                 />
               ))}
               <h2>
-                Total:{' '}
+                Produtos:{' '}
                 {(total / 100).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+                <br></br>
+                Frete: R${`${frete}`}
+              </h2>
+              <h2>
+                Total:{' '}
+                {(total / 100 + frete).toLocaleString('pt-br', {
                   style: 'currency',
                   currency: 'BRL',
                 })}
