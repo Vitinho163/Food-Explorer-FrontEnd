@@ -26,7 +26,7 @@ export function Order() {
   const [page, setPage] = useState('orderNotAddress')
 
   // State address
-  const [address, setAddress] = useState({})
+  const [address, setAddress] = useState()
 
   // update address
   function handleAddressChange(newAddress) {
@@ -96,7 +96,7 @@ export function Order() {
     if (address) {
       async function fetchDelivery() {
         const response = await api.get(
-          `/delivery?origin=BOM D BOCA, francisco morato&destination=Osasco, SP`,
+          `/delivery?origin=BOM D BOCA, francisco morato&destination=${address.street},${address.number}, ${address.zipCode}`,
         )
 
         if (response) {
@@ -240,7 +240,10 @@ export function Order() {
           )}
 
           {cart.length !== 0 &&
-            (page === 'order' || page === 'payment' || page === 'address') && (
+            (page === 'order' ||
+              page === 'payment' ||
+              page === 'address' ||
+              page === 'orderNotAddress') && (
               <Content>
                 <h1>Meu pedido</h1>
                 {cart.length !== 0 &&
@@ -253,26 +256,48 @@ export function Order() {
                     />
                   ))}
 
-                <h2>
-                  Total:{' '}
-                  {(total / 100).toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </h2>
+                {typeof frete !== 'undefined' ? (
+                  <>
+                    <h2>
+                      Produtos:{' '}
+                      {(total / 100).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                      <br />
+                      Frete: R${frete.toFixed(2)}
+                    </h2>
+                    <h2>
+                      Total:{' '}
+                      {(total / 100 + frete).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                    </h2>
+                  </>
+                ) : (
+                  <h2>
+                    Total:{' '}
+                    {(total / 100).toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    })}
+                  </h2>
+                )}
               </Content>
             )}
 
-          {cart.length !== 0 && page === 'address' && (
-            <Content>
-              <h1>Entrega</h1>
-              <Tabs
-                page={page}
-                onClick={() => setPage('order')}
-                onAddressChange={handleAddressChange}
-              />
-            </Content>
-          )}
+          {(cart.length !== 0 && page === 'address') ||
+            (page === 'orderNotAddress' && (
+              <Content>
+                <h1>Entrega</h1>
+                <Tabs
+                  page={page}
+                  onClick={() => setPage('order')}
+                  onAddressChange={handleAddressChange}
+                />
+              </Content>
+            ))}
 
           {cart.length === 0 && orderItems.length !== 0 && (
             <Content>

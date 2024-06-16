@@ -18,7 +18,7 @@ import { useState } from 'react'
 
 export function Tabs({ page, onClick, onAddressChange }) {
   let value = 'pix'
-  if (page === 'address') {
+  if (page === 'address' || page === 'orderNotAddress') {
     value = 'address'
   }
 
@@ -89,7 +89,7 @@ export function Tabs({ page, onClick, onAddressChange }) {
   async function searchCep(cep) {
     console.log(cep)
     try {
-      const response = await api.post(`/search_cep`, { cep })
+      const response = await api.post(`/delivery`, { cep })
       setOpenToast(false)
       if (response) {
         setStreet(response.data.logradouro)
@@ -123,7 +123,7 @@ export function Tabs({ page, onClick, onAddressChange }) {
       )}
 
       <TabsRoot defaultValue={value}>
-        {page !== 'address' && (
+        {page !== 'address' && page !== 'orderNotAddress' && (
           <TabsList>
             <TabsTrigger value="pix">
               {' '}
@@ -137,7 +137,7 @@ export function Tabs({ page, onClick, onAddressChange }) {
           </TabsList>
         )}
 
-        {page === 'address' && (
+        {(page === 'address' || page === 'orderNotAddress') && (
           <>
             <TabsContent value="address" className="address">
               <Form>
