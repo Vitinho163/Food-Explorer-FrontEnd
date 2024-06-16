@@ -61,7 +61,11 @@ export function Order() {
     setOpenToast(false)
 
     try {
-      const response = await api.post('/orders', { orderItems: cart, address })
+      const response = await api.post('/orders', {
+        orderItems: cart,
+        address,
+        shippingValue: frete,
+      })
       setToastTitle(response.data.message)
       setToastDescription(response.data.message)
       setOpenToast(true)
@@ -103,6 +107,7 @@ export function Order() {
           const frete =
             Number(response.data.distance.replace(' km', '')) * taxaPorKm
           setFrete(frete)
+          console.log('setou frete')
         }
       }
       fetchDelivery()
