@@ -35,6 +35,7 @@ export function Order() {
 
   // order state
   const [orderItems, setOrderItems] = useState([])
+  const [orderShippingValue, setOrderShippingValue] = useState()
 
   // control the toast
   const [openToast, setOpenToast] = useState(false)
@@ -89,6 +90,7 @@ export function Order() {
       async function fetchOrder() {
         const response = await api.get(`/orders/${id}`)
         setOrderItems(response.data.order.orderItems)
+        setOrderShippingValue(response.data.order.shipping_value)
         setPage(response.data.order.status)
       }
       fetchOrder()
@@ -217,8 +219,17 @@ export function Order() {
                   <OrderProduct key={order.id} product={order} />
                 ))}
                 <h2>
-                  Total:{' '}
+                  Produtos:{' '}
                   {(total / 100).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                  <br></br>
+                  Frete: {orderShippingValue}
+                </h2>
+                <h2>
+                  Total:{' '}
+                  {(total / 100 + orderShippingValue).toLocaleString('pt-br', {
                     style: 'currency',
                     currency: 'BRL',
                   })}
@@ -311,8 +322,17 @@ export function Order() {
                 <OrderProduct key={order.id} product={order} />
               ))}
               <h2>
-                Total:{' '}
+                Produtos:{' '}
                 {(total / 100).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })}
+                <br></br>
+                Frete: {orderShippingValue}
+              </h2>
+              <h2>
+                Total:{' '}
+                {(total / 100 + orderShippingValue).toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL',
                 })}
