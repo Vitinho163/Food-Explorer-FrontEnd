@@ -238,7 +238,13 @@ export function Order() {
             ) : (
               <Content>
                 <h1>Pagamento</h1>
-                <Tabs page={page} onClick={handleNewOrder} />
+                <Tabs
+                  page={page}
+                  onPaymentComplete={handleNewOrder}
+                  total={total}
+                  frete={frete}
+                  email={user.email}
+                />
               </Content>
             ))}
         </MobileContent>
@@ -348,7 +354,13 @@ export function Order() {
               page === 'delivered') && (
               <Content>
                 <h1>Pagamento</h1>
-                <Tabs page={page} onClick={handleNewOrder} />
+                <Tabs
+                  page={page}
+                  onPaymentComplete={handleNewOrder}
+                  total={total}
+                  frete={frete}
+                  email={user.email}
+                />
               </Content>
             )}
         </DesktopContent>

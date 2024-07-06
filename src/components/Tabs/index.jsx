@@ -1,4 +1,3 @@
-import qrCode from '../../assets/qrCode.svg'
 import { api } from '../../services/api'
 import {
   Form,
@@ -16,7 +15,15 @@ import { CiClock2 } from 'react-icons/ci'
 import { Toast } from '../../components/Toast'
 import { useState } from 'react'
 
-export function Tabs({ page, onClick, onAddressChange }) {
+export function Tabs({
+  page,
+  onClick,
+  onAddressChange,
+  onPaymentComplete,
+  total,
+  frete,
+  email,
+}) {
   let value = 'pix'
   if (page === 'address' || page === 'orderNotAddress') {
     value = 'address'
@@ -35,6 +42,9 @@ export function Tabs({ page, onClick, onAddressChange }) {
   const [zipCode, setZipCode] = useState('')
   const [complement, setComplement] = useState('')
   const [neighborhood, setNeighborhood] = useState('')
+
+  const [qrCodePix, setQrCodePix] = useState('')
+  const [qrCodeCopy, setQrCodeCopy] = useState('')
 
   // function to validate address fields
   function validateAddressFields() {
@@ -110,6 +120,54 @@ export function Tabs({ page, onClick, onAddressChange }) {
         setOpenToast(true)
       }
     }
+  }
+
+  async function handlePayment() {
+    setOpenToast(false)
+    try {
+      const response = await api.post('/payments', {
+        transaction_amount: total / 100 + frete,
+        description: 'Food-Explorer-order',
+        paymentMethodId: 'pix',
+        email,
+      })
+      setQrCodePix(
+        response.data.point_of_interaction.transaction_data.qr_code_base64,
+      )
+      setQrCodeCopy(response.data.point_of_interaction.transaction_data.qr_code)
+      setToastTitle('success')
+      setToastDescription('Escaneie o QR Code para concluir o pagamento.')
+      setOpenToast(true)
+    } catch (error) {
+      console.error('Erro ao processar o pagamento:', error)
+      setToastTitle('Erro')
+      setToastDescription('Erro ao processar o pagamento. Tente novamente.')
+      setOpenToast(true)
+    }
+  }
+
+  function handleCopyQR() {
+    setOpenToast(false)
+    navigator.clipboard
+      .writeText(qrCodeCopy)
+      .then(() => {
+        setToastTitle('Success')
+        setToastDescription('QR Code copiado para a área de transferência.')
+        setOpenToast(true)
+      })
+      .catch((err) => {
+        console.error('Erro ao copiar o QR Code:', err)
+        setToastTitle('Error')
+        setToastDescription('Erro ao copiar o QR Code. Tente novamente.')
+        setOpenToast(true)
+      })
+  }
+
+  function handleFinalizePayment() {
+    setOpenToast(false)
+    setToastTitle('success')
+    setToastDescription('Pagamento aprovado!')
+    onPaymentComplete()
   }
 
   return (
@@ -203,23 +261,40 @@ export function Tabs({ page, onClick, onAddressChange }) {
         {(page === 'payment' || page === 'order') && (
           <>
             <TabsContent value="pix">
-              <img src={qrCode} alt="qr code" />
-              <Button title="Finalizar pagamento" onClick={onClick} />
+              {qrCodePix ? (
+                <>
+                  <img
+                    src={`data:image/png;base64,${qrCodePix}`}
+                    alt="QR Code"
+                    style={{ width: '181px', height: '181px' }}
+                  />
+                  <Button title="QrCode copia e cola" onClick={handleCopyQR} />
+                  <Button
+                    title="Verificar pagamento"
+                    onClick={handleFinalizePayment}
+                  />
+                </>
+              ) : (
+                <>
+                  <p>Carregando QR Code...</p>
+                  <Button title="Criar pagamento" onClick={handlePayment} />
+                </>
+              )}
             </TabsContent>
-
             <TabsContent value="card">
               <Form>
                 <Input
                   label="Número do Cartão"
                   placeholder="0000 0000 0000 0000"
                 />
-
                 <Wrapper>
                   <Input label="Validade" placeholder="00/00" />
                   <Input label="CVV" placeholder="000" />
                 </Wrapper>
-
-                <Button title="Finalizar pagamento" onClick={onClick} />
+                <Button
+                  title="Finalizar pagamento"
+                  onClick={handleFinalizePayment}
+                />
               </Form>
             </TabsContent>
           </>
