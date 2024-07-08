@@ -46,6 +46,8 @@ export function Tabs({
   const [qrCodePix, setQrCodePix] = useState('')
   const [qrCodeCopy, setQrCodeCopy] = useState('')
 
+  const [paymentId, setPaymentId] = useState('')
+
   // function to validate address fields
   function validateAddressFields() {
     return city && state && street && number && zipCode
@@ -135,6 +137,7 @@ export function Tabs({
         response.data.point_of_interaction.transaction_data.qr_code_base64,
       )
       setQrCodeCopy(response.data.point_of_interaction.transaction_data.qr_code)
+      setPaymentId(response.data.id)
       setToastTitle('success')
       setToastDescription('Escaneie o QR Code para concluir o pagamento.')
       setOpenToast(true)
@@ -163,11 +166,19 @@ export function Tabs({
       })
   }
 
-  function handleFinalizePayment() {
+  async function handleFinalizePayment() {
     setOpenToast(false)
-    setToastTitle('success')
-    setToastDescription('Pagamento aprovado!')
-    onPaymentComplete()
+    try {
+      const response = await api.get(`/payments/${paymentId}`)
+      if (response.data.status === 'approved') {
+        setToastTitle('success')
+        setToastDescription('Pagamento aprovado!')
+        setOpenToast(true)
+        onPaymentComplete()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
